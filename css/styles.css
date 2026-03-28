@@ -1,0 +1,190 @@
+/* ========================================
+   Split-Flap Display — Global Styles
+   ======================================== */
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Board */
+  --board-bg: #131316;
+  --board-surface: #1a1a1e;
+  --board-padding: 0.5vh 1vw;
+
+  /* Flaps */
+  --flap-bg: #27272d;
+  --flap-bg-top: #2d2d34;
+  --flap-text: #e8e4d9;
+  --flap-gap: 0.6vh;
+  --flap-col-gap: 0.3vw;
+  --flap-split-line: #0e0e11;
+  --flap-radius: 3px;
+
+  /* Animation */
+  --flip-duration: 100ms; /* overridden by JS speed setting */
+  --perspective: 900px;
+
+  /* Sizing — JS computes and sets these as inline styles on .board */
+  --flap-width: 60px;
+  --flap-height: 80px;
+  --flap-font-size: 56px;
+  --flap-gap: 6px;
+  --flap-col-gap: 3px;
+}
+
+html, body {
+  height: 100dvh;
+  width: 100dvw;
+  overflow: hidden;
+  background: var(--board-bg);
+  font-family: 'Barlow Semi Condensed', sans-serif;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Subtle ambient light from center */
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, #1e1e24 0%, var(--board-bg) 100%);
+}
+
+/* ========================================
+   Board Container
+   ======================================== */
+
+.board {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--flap-gap);
+  padding: var(--board-padding);
+  background: var(--board-surface);
+  border-radius: 6px;
+  box-shadow:
+    0 1px 0 0 #2a2a30,
+    0 4px 20px rgba(0, 0, 0, 0.5),
+    0 12px 50px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+/* ========================================
+   Board Row
+   ======================================== */
+
+.board__row {
+  display: flex;
+  gap: var(--flap-col-gap);
+  justify-content: center;
+}
+
+/* ========================================
+   Debug Controls (remove for production)
+   ======================================== */
+
+.debug-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2em;
+  padding: 0.8em 1.5em;
+  background: #16161a;
+  border-top: 1px solid #2a2a30;
+  z-index: 100;
+  font-family: 'Barlow Semi Condensed', sans-serif;
+}
+
+.debug-group {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.debug-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #555;
+  margin-right: 0.3em;
+}
+
+.debug-select,
+.debug-input,
+.debug-btn {
+  font-family: 'Barlow Semi Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #ccc;
+  background: #222228;
+  border: 1px solid #333;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.debug-select {
+  padding: 0.35em 0.6em;
+  text-transform: uppercase;
+  appearance: auto;
+}
+
+.debug-select:hover,
+.debug-select:focus {
+  border-color: #555;
+  outline: none;
+}
+
+.debug-input {
+  padding: 0.35em 0.7em;
+  width: 18ch;
+  text-transform: uppercase;
+  cursor: text;
+}
+
+.debug-input::placeholder {
+  color: #444;
+  text-transform: none;
+}
+
+.debug-input:focus {
+  border-color: #555;
+  outline: none;
+  color: #e8e4d9;
+}
+
+.debug-input:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.debug-btn {
+  padding: 0.35em 1em;
+  text-transform: uppercase;
+}
+
+.debug-btn:hover {
+  color: #ccc;
+  border-color: #555;
+}
+
+.debug-btn--action {
+  color: #8a8a6a;
+  border-color: #555530;
+}
+
+.debug-btn--action:hover {
+  color: #ccc990;
+  border-color: #777750;
+}

@@ -1,0 +1,210 @@
+/* ========================================
+   Split-Flap — Individual Flap Module
+   ======================================== */
+
+.flap {
+  position: relative;
+  width: var(--flap-width);
+  height: var(--flap-height);
+  perspective: var(--perspective);
+  font-family: 'Barlow Semi Condensed', sans-serif;
+  font-weight: 600;
+  font-size: var(--flap-font-size);
+  line-height: var(--flap-height);
+  text-align: center;
+  color: var(--flap-text);
+  user-select: none;
+  contain: layout style;
+}
+
+/* ========================================
+   Static Halves
+   ======================================== */
+
+.flap__top,
+.flap__bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50%;
+  overflow: hidden;
+  background: var(--flap-bg);
+}
+
+.flap__top {
+  top: 0;
+  background: var(--flap-bg-top);
+  border-radius: var(--flap-radius) var(--flap-radius) 0 0;
+  /* Subtle top lighting edge */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.flap__bottom {
+  bottom: 0;
+  border-radius: 0 0 var(--flap-radius) var(--flap-radius);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Text positioning — top half shows upper portion, bottom shows lower */
+.flap__top .flap__text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 200%;
+  line-height: calc(var(--flap-height));
+  text-align: center;
+}
+
+.flap__bottom .flap__text {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200%;
+  line-height: calc(var(--flap-height));
+  text-align: center;
+}
+
+/* ========================================
+   Split Line (the gap between halves)
+   ======================================== */
+
+.flap::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1.5px;
+  background: var(--flap-split-line);
+  z-index: 10;
+  pointer-events: none;
+  box-shadow:
+    0 -1px 2px rgba(0, 0, 0, 0.4),
+    0 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+/* ========================================
+   Flip Card (the animated piece)
+   ======================================== */
+
+.flap__card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  transform-origin: center bottom;
+  transform-style: preserve-3d;
+  will-change: transform;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* Front face — top half of current character (folds down) */
+.flap__card-front,
+.flap__card-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.flap__card-front {
+  background: var(--flap-bg-top);
+  border-radius: var(--flap-radius) var(--flap-radius) 0 0;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.flap__card-front .flap__text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 200%;
+  line-height: calc(var(--flap-height));
+  text-align: center;
+}
+
+/* Back face — bottom half of next character (backface of the folding card) */
+.flap__card-back {
+  background: var(--flap-bg);
+  border-radius: 0 0 var(--flap-radius) var(--flap-radius);
+  transform: rotateX(180deg);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.flap__card-back .flap__text {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200%;
+  line-height: calc(var(--flap-height));
+  text-align: center;
+}
+
+/* ========================================
+   Flip Animation
+   ======================================== */
+
+@keyframes flip-down {
+  0% {
+    transform: rotateX(0deg);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+  30% {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    transform: rotateX(-90deg);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  }
+  100% {
+    transform: rotateX(-180deg);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+/* Shadow on the bottom static piece during flip — light occlusion */
+@keyframes bottom-shadow {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.flap__card.flipping {
+  animation: flip-down var(--flip-duration) ease-in-out forwards;
+}
+
+/* Darken bottom half while card passes over it */
+.flap__bottom-shadow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.35) 0%, transparent 80%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.flap.flipping .flap__bottom-shadow {
+  animation: bottom-shadow var(--flip-duration) ease-in-out forwards;
+}
